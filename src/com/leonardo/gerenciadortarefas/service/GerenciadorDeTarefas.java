@@ -60,12 +60,16 @@ public class GerenciadorDeTarefas {
         throw new TarefaNaoEncontradaException("Tarefa com ID " + id + " não encontrada");
     }
 
-    public List<Tarefa> getTarefasPendentes() {
+    public List<Tarefa> getTarefasPendentes() throws TarefaNaoEncontradaException {
         List<Tarefa> tarefasPendentes = new ArrayList<>();
         for (Tarefa tarefa : tarefas) {
             if (tarefa.getStatus() == (StatusTarefa.PENDENTE)) {
                 tarefasPendentes.add(tarefa);
             }
+        }
+
+        if (tarefasPendentes.isEmpty()) {
+            throw new TarefaNaoEncontradaException("Não há tarefas pendentes para mostrar");
         }
         return tarefasPendentes;
     }
@@ -76,6 +80,10 @@ public class GerenciadorDeTarefas {
             if (tarefa.getStatus() == (StatusTarefa.CONCLUIDA)) {
                 tarefasConcluidas.add(tarefa);
             }
+        }
+
+        if (tarefasConcluidas.isEmpty()) {
+            throw new TarefaNaoEncontradaException("Não há tarefas concluidas para mostrar");
         }
         return tarefasConcluidas;
     }
@@ -88,5 +96,15 @@ public class GerenciadorDeTarefas {
         }
 
         throw new TarefaNaoEncontradaException("Tarefa com ID " + id + " não encontrada");
+    }
+
+    public void iniciarTarefa(Long id) throws TarefaNaoEncontradaException {
+        Tarefa tarefa = buscarTarefaPorId(id);
+
+        if (tarefa.getStatus() == StatusTarefa.PENDENTE) {
+            tarefa.setStatus(StatusTarefa.EM_ANDAMENTO);
+        } else {
+            throw new IllegalArgumentException("Apenas tarefas com status PENDENTE podem ser iniciadas");
+        }
     }
 }
