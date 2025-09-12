@@ -3,7 +3,7 @@
 .idea/
 *.iml
 /SistemaGrenciadorTarefas.iml
-workspace.xml
+.idea/workspace.xml
 
 # Pasta de código compilado
 out/
