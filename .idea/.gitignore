@@ -2,6 +2,7 @@
 # Arquivos e pastas do IntelliJ IDEA
 .idea/
 *.iml
+/SistemaGrenciadorTarefas.iml
 workspace.xml
 
 # Pasta de código compilado
