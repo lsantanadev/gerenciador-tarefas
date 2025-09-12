@@ -1,3 +1,15 @@
 # Default ignored files
-/shelf/
-/workspace.xml
+# Arquivos e pastas do IntelliJ IDEA
+.idea/
+*.iml
+workspace.xml
+
+# Pasta de código compilado
+out/
+
+# Arquivos de build de outras ferramentas (Maven/Gradle)
+target/
+build/
+
+# Outros
+*.log
