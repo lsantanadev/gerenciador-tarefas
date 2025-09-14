@@ -37,54 +37,43 @@ public class GerenciadorDeTarefas {
     }
 
     public void atualizarTarefa(Long id, Tarefa novaTarefa) throws TarefaNaoEncontradaException {
-        for (Tarefa tarefa : tarefas) {
-            if (id.equals(tarefa.getId())) {
-                tarefa.setTitulo(novaTarefa.getTitulo());
-                tarefa.setDescricao(novaTarefa.getDescricao());
-                tarefa.setDataDeVencimento(novaTarefa.getDataDeVencimento());
-                return;
-            }
-        }
+        Tarefa tarefaExistente = buscarTarefaPorId(id);
+
+        tarefaExistente.setTitulo(novaTarefa.getTitulo());
+        tarefaExistente.setDescricao(novaTarefa.getDescricao());
+        tarefaExistente.setDataDeVencimento(novaTarefa.getDataDeVencimento());
 
         throw new TarefaNaoEncontradaException("Tarefa com ID " + id + " não encontrada");
     }
 
     public void marcarComoConcluida(Long id) throws TarefaNaoEncontradaException {
-        for (Tarefa tarefa : tarefas) {
-            if (id.equals(tarefa.getId())) {
-                tarefa.setStatus(StatusTarefa.CONCLUIDA);
-                return;
-            }
-        }
+        Tarefa tarefaExistente = buscarTarefaPorId(id);
+        tarefaExistente.setStatus(StatusTarefa.CONCLUIDA);
 
         throw new TarefaNaoEncontradaException("Tarefa com ID " + id + " não encontrada");
     }
 
-    public List<Tarefa> getTarefasPendentes() throws TarefaNaoEncontradaException {
+    public List<Tarefa> getTarefasPendentes() {
         List<Tarefa> tarefasPendentes = new ArrayList<>();
+
         for (Tarefa tarefa : tarefas) {
             if (tarefa.getStatus() == (StatusTarefa.PENDENTE)) {
                 tarefasPendentes.add(tarefa);
             }
         }
 
-        if (tarefasPendentes.isEmpty()) {
-            throw new TarefaNaoEncontradaException("Não há tarefas pendentes para mostrar");
-        }
         return tarefasPendentes;
     }
 
-    public List<Tarefa> getTarefasConcluida() throws TarefaNaoEncontradaException {
+    public List<Tarefa> getTarefasConcluida() {
         List<Tarefa> tarefasConcluidas = new ArrayList<>();
+
         for (Tarefa tarefa : tarefas) {
             if (tarefa.getStatus() == (StatusTarefa.CONCLUIDA)) {
                 tarefasConcluidas.add(tarefa);
             }
         }
 
-        if (tarefasConcluidas.isEmpty()) {
-            throw new TarefaNaoEncontradaException("Não há tarefas concluidas para mostrar");
-        }
         return tarefasConcluidas;
     }
 
