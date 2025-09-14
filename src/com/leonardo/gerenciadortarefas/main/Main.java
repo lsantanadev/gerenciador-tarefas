@@ -1,10 +1,12 @@
 package com.leonardo.gerenciadortarefas.main;
 
+import com.leonardo.gerenciadortarefas.exception.TarefaNaoEncontradaException;
 import com.leonardo.gerenciadortarefas.model.Tarefa;
 import com.leonardo.gerenciadortarefas.service.GerenciadorDeTarefas;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -12,13 +14,14 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dataVencimento;
-        short opcao = 0;
+        int opcao = 0;
 
         GerenciadorDeTarefas gerenciador = new GerenciadorDeTarefas();
         do {
-            System.out.println("==================================\n" +
-                               "= SISTEMA GERENCIADOR DE TAREFAS =\n" +
-                               "==================================");
+            System.out.println("""
+                    ==================================
+                    = SISTEMA GERENCIADOR DE TAREFAS =
+                    ==================================""");
             System.out.println("1. Adicionar Tarefa");
             System.out.println("2. Listar Tarefas Pendentes");
             System.out.println("3. Listar Tarefas Concluidas");
@@ -32,19 +35,19 @@ public class Main {
             sc.nextLine();
 
             switch (escolha) {
-                case 1:
+                case 1: // Adicionar Tarefa
+                    System.out.print("Titulo: ");
+                    String titulo = sc.nextLine();
+
+                    System.out.print("Descrição: ");
+                    String descricao = sc.nextLine();
+
+                    System.out.print("Data de vencimento (dd/MM/yyyy): ");
+                    String data = sc.nextLine();
+                    dataVencimento = LocalDate.parse(data, formatter);
+
+                    Tarefa tarefa = new Tarefa(titulo, descricao, dataVencimento);
                     try {
-                        System.out.print("Titulo: ");
-                        String titulo = sc.nextLine();
-
-                        System.out.print("Descrição: ");
-                        String descricao = sc.nextLine();
-
-                        System.out.print("Data de vencimento (dd/MM/yyyy): ");
-                        String data = sc.nextLine();
-                        dataVencimento = LocalDate.parse(data, formatter);
-
-                        Tarefa tarefa = new Tarefa(titulo, descricao, dataVencimento);
                         gerenciador.adicionarTarefa(tarefa);
                         System.out.println("Tarefa adicionada com sucesso!");
                     } catch (IllegalArgumentException e) {
@@ -52,10 +55,104 @@ public class Main {
                     }
                     break;
 
-                case 2:
+                case 2: // Listar tarefas pendentes
+                    List<Tarefa> pendentes = gerenciador.getTarefasPendentes();
+
+                    if (pendentes.isEmpty()) {
+                        System.out.println("Não há tarefas pendentes para mostrar");
+                    } else {
+                        System.out.println("===Tarefas Pendentes===");
+                        for (Tarefa pendente : pendentes) {
+                            System.out.println(pendente);
+                        }
+                        System.out.println("=======================");
+                    }
+                    break;
+
+                case 3: // Listar tarefas concluidas
+                    List<Tarefa> concluidas = gerenciador.getTarefasConcluida();
+
+                    if (concluidas.isEmpty()) {
+                        System.out.println("Não há tarefas concluídas para mostrar");
+                    } else {
+                        System.out.println("===Tarefas Concluídas===");
+                        for (Tarefa concluida : concluidas) {
+                            System.out.println(concluida);
+                        }
+                        System.out.println("========================");
+                    }
+                    break;
+
+                case 4: // Marcar tarefa como concluida
+                    System.out.println("Digite o ID da tarefa para concluir: ");
+                    Long idConcluir = sc.nextLong();
+                    sc.nextLine();
+
+                    try {
+                        gerenciador.marcarComoConcluida(idConcluir);
+                    } catch (TarefaNaoEncontradaException e) {
+                        System.err.println(e.getMessage());
+                    }
+                    break;
+
+                case 5: // Iniciar uma tarefa
+                    System.out.println("Digite o ID da tarefa para iniciar: ");
+                    Long idIniciar = sc.nextLong();
+                    sc.nextLine();
+
+                    try {
+                        gerenciador.iniciarTarefa(idIniciar);
+                    } catch (TarefaNaoEncontradaException e) {
+                        System.err.println(e.getMessage());
+                    }
+                    break;
+
+                case 6: // Atualizar tarefa
+                    System.out.println("Digite o ID da tarefa que quer atualizar os dados: ");
+                    Long idAtualizar = sc.nextLong();
+                    sc.nextLine();
+
+                    System.out.println("Novo título: ");
+                    String novoTitulo = sc.nextLine();
+
+                    System.out.println("Nova Descrição: ");
+                    String novaDescricao = sc.nextLine();
 
 
+                    System.out.println("Nova Data: ");
+                    String novaData = sc.nextLine();
+                    dataVencimento = LocalDate.parse(novaData, formatter);
+
+                    Tarefa tarefaAtualizada = new Tarefa(novoTitulo, novaDescricao, dataVencimento);
+
+                    try {
+                        gerenciador.atualizarTarefa(idAtualizar, tarefaAtualizada);
+                        System.out.println("Tarefa atualizada ID: " + tarefaAtualizada.getId());
+                    } catch (TarefaNaoEncontradaException e) {
+                        System.err.println(e.getMessage());
+                    }
+                    break;
+
+                case 7: // Remover tarefa
+                    System.out.println("Digite o ID da tarefa para excluir: ");
+                    Long idRemove = sc.nextLong();
+                    sc.nextLine();
+
+                    try {
+                        gerenciador.removerTarefa(idRemove);
+                    } catch (TarefaNaoEncontradaException e) {
+                        System.err.println(e.getMessage());
+                    }
+                    break;
+
+                case 8: // sair
+                    System.out.println("Saindo......");
+                    break;
+
+                default:
+                    System.out.println("Valor inválido... Escolha entre 1 e 8");
+                    break;
             }
-        } while (opcao != 8);
+        } while (opcao == 8);
     }
 }
