@@ -6,7 +6,7 @@
 .idea/workspace.xml
 
 # Pasta de código compilado
-out/
+/out
 
 # Arquivos de build de outras ferramentas (Maven/Gradle)
 target/
