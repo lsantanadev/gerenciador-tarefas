@@ -124,12 +124,13 @@ public class Main {
 
                     System.out.println("Nova Data: ");
                     String novaData = sc.nextLine();
-                    dataVencimento = LocalDate.parse(novaData, formatter);
-
-                    Tarefa tarefaAtualizada = new Tarefa(novoTitulo, novaDescricao, dataVencimento);
 
                     try {
+                        dataVencimento = LocalDate.parse(novaData, formatter);
+
+                        Tarefa tarefaAtualizada = new Tarefa(novoTitulo, novaDescricao, dataVencimento);
                         gerenciador.atualizarTarefa(idAtualizar, tarefaAtualizada);
+
                         System.out.println("Tarefa atualizada ID: " + tarefaAtualizada.getId());
                     } catch (TarefaNaoEncontradaException e) {
                         System.err.println(e.getMessage());
