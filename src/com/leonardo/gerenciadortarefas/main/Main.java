@@ -6,15 +6,16 @@ import com.leonardo.gerenciadortarefas.service.GerenciadorDeTarefas;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        int escolha = 0;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dataVencimento;
-        int opcao = 0;
 
         GerenciadorDeTarefas gerenciador = new GerenciadorDeTarefas();
         do {
@@ -31,7 +32,7 @@ public class Main {
             System.out.println("7. Remover Tarefa");
             System.out.println("8. Sair");
             System.out.print("Escolha uma Opção: ");
-            int escolha = sc.nextInt();
+            escolha = sc.nextInt();
             sc.nextLine();
 
             switch (escolha) {
@@ -44,12 +45,14 @@ public class Main {
 
                     System.out.print("Data de vencimento (dd/MM/yyyy): ");
                     String data = sc.nextLine();
-                    dataVencimento = LocalDate.parse(data, formatter);
 
-                    Tarefa tarefa = new Tarefa(titulo, descricao, dataVencimento);
                     try {
+                        dataVencimento = LocalDate.parse(data, formatter);
+                        Tarefa tarefa = new Tarefa(titulo, descricao, dataVencimento);
                         gerenciador.adicionarTarefa(tarefa);
                         System.out.println("Tarefa adicionada com sucesso!");
+                    } catch (DateTimeParseException e) {
+                        System.err.println("ERRO: Formato de data inválido. Por favor, use o formato dd/MM/yyyy.");
                     } catch (IllegalArgumentException e) {
                         System.err.println(e.getMessage());
                     }
@@ -153,6 +156,6 @@ public class Main {
                     System.out.println("Valor inválido... Escolha entre 1 e 8");
                     break;
             }
-        } while (opcao == 8);
+        } while (escolha != 8);
     }
 }
