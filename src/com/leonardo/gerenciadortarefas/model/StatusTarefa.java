@@ -14,8 +14,4 @@ public enum StatusTarefa {
     public String getNomeStatus() {
         return nomeStatus;
     }
-
-    public void setNomeStatus(String nomeStatus) {
-        this.nomeStatus = nomeStatus;
-    }
 }
