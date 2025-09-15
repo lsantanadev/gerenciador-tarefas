@@ -43,14 +43,12 @@ public class GerenciadorDeTarefas {
         tarefaExistente.setDescricao(novaTarefa.getDescricao());
         tarefaExistente.setDataDeVencimento(novaTarefa.getDataDeVencimento());
 
-        throw new TarefaNaoEncontradaException("Tarefa com ID " + id + " não encontrada");
     }
 
     public void marcarComoConcluida(Long id) throws TarefaNaoEncontradaException {
         Tarefa tarefaExistente = buscarTarefaPorId(id);
         tarefaExistente.setStatus(StatusTarefa.CONCLUIDA);
 
-        throw new TarefaNaoEncontradaException("Tarefa com ID " + id + " não encontrada");
     }
 
     public List<Tarefa> getTarefasPendentes() {
